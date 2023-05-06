@@ -6,7 +6,6 @@ import graghM from '../models/graph.js';
 const router = express.Router();
 
 export const getGraph = async (req, res) => {
-    const { page } = req.query;
 
     const minDistance = (dist,sptSet,V) =>{
         let min = Number.MAX_VALUE;
@@ -59,6 +58,15 @@ export const getGraph = async (req, res) => {
         const a = JSON.parse(posts[0].arr)
         const ans = JSON.stringify(dijkstra(a, 0));
         res.json({ data: ans} );
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getGraphs = async (req, res) => {
+    const { id } = req.params;
+    try {
+        res.json({ data: [id]} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
