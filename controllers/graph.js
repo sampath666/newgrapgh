@@ -65,8 +65,59 @@ export const getGraph = async (req, res) => {
 
 export const getGraphs = async (req, res) => {
     const { id } = req.params;
+
+    const minDistance = (dist,sptSet,V) =>{
+        let min = Number.MAX_VALUE;
+        let min_index = -1;
+
+        for(let v = 0; v < V; v++)
+        {
+            if (sptSet[v] == false && dist[v] <= min)
+            {
+                min = dist[v];
+                min_index = v;
+            }
+        }
+        return min_index;
+    }
+    const dijkstra = (graph, src)=> {
+        const V = graph.length
+        let dist = new Array(V);
+        let sptSet = new Array(V);
+
+        for(let i = 0; i < V; i++)
+        {
+            dist[i] = Number.MAX_VALUE;
+            sptSet[i] = false;
+        }
+
+        dist[src] = 0;
+
+        for(let count = 0; count < V - 1; count++)
+        {
+
+            let u = minDistance(dist, sptSet,V);
+            sptSet[u] = true;
+            for(let v = 0; v < V; v++)
+            {
+                if (!sptSet[v] && graph[u][v] != 0 &&
+                    dist[u] != Number.MAX_VALUE &&
+                    dist[u] + graph[u][v] < dist[v])
+                {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+
+        return dist
+    }
+
     try {
-        res.json({ data: [id]} );
+        const posts = await graghM.find().sort({ _id: -1 });
+       // console.log(id);
+        const a = JSON.parse(posts[0].arr)
+        const ans = JSON.stringify(dijkstra(a, parseInt(id)));
+        res.json({ data: ans,idp:id} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
