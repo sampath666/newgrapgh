@@ -55,9 +55,12 @@ export const getGraph = async (req, res) => {
 
     try {
         const posts = await graghM.find().sort({ _id: -1 });
-        const a = JSON.parse(posts[0].arr)
-        const ans = JSON.stringify(dijkstra(a, 0));
-        res.json({ data: ans} );
+        const p1 = posts[0];
+        const p2 = Object.entries(p1)[5][1];
+        const arr = Object.entries(p2)[2][1];
+        const st = Object.entries(p2)[0][1];
+        const ans = JSON.stringify(dijkstra(arr, 0 ));
+        res.json({ data: ans,stations:JSON.stringify(st)} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -114,10 +117,16 @@ export const getGraphs = async (req, res) => {
 
     try {
         const posts = await graghM.find().sort({ _id: -1 });
-       // console.log(id);
-        const a = JSON.parse(posts[0].arr)
-        const ans = JSON.stringify(dijkstra(a, parseInt(id)));
-        res.json({ data: ans,idp:id} );
+        const p1 = posts[0];
+        const p2 = Object.entries(p1)[5][1];
+        const arr = Object.entries(p2)[2][1];
+        const st = Object.entries(p2)[0][1];
+        const ans = JSON.stringify(dijkstra(arr, parseInt(id)));
+        res.json({ data: ans,stations:JSON.stringify(st)} );
+        // console.log(id);
+        //const a = JSON.parse(posts[0].arr)
+        //const ans = JSON.stringify(dijkstra(a, parseInt(id)));
+        //res.json({ data: ans,idp:id} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
