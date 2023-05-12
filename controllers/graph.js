@@ -179,7 +179,7 @@ export const getGraphs = async (req, res) => {
         const destination = parseInt(stations['d'])
         console.log(start,destination)
         console.log(getDistance(start,destination,arr,st));
-        res.json({ data: ans,stations:JSON.stringify(st),dist:getDistance(start,destination,arr,st)} );
+        res.json({ arr:arr,data: ans,stations:JSON.stringify(st),dist:getDistance(start,destination,arr,st)} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

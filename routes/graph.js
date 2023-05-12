@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/:id', getGraphs);
 router.get('/', getGraph);
-router.get('/sub/', getCost);
+router.get('/under/', getCost);
 router.post('/', postGraph);
 
 export default router;
