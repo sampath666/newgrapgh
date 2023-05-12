@@ -60,7 +60,7 @@ export const getGraph = async (req, res) => {
         const arr = Object.entries(p2)[2][1];
         const st = Object.entries(p2)[0][1];
         const ans = JSON.stringify(dijkstra(arr, 0 ));
-        res.json({ data: ans,stations:JSON.stringify(st)} );
+        res.json({ data: ans,stations:JSON.stringify(st),arr:arr} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
