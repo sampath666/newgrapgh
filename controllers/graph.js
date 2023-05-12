@@ -115,6 +115,58 @@ export const getGraphs = async (req, res) => {
         return dist
     }
 
+    const getDistance = (start,end,ans,st) =>{
+        const m = st[start]
+        let maxDistance=0,c=0,v=0;
+
+        m.map(each => {
+            c += 1 ;
+            if(each[2]==1 && maxDistance<each[1]){
+                maxDistance = each[1];
+                v = each[0]
+
+            }
+        })
+        const gp = dijkstra(ans,start-1)
+        if (gp[end-1] < maxDistance  ){
+            let n = maxDistance
+            m.map(each => {
+                if(each[2]===1 && n>each[1] && each[1]>gp[end-1]){
+                    n = each[1]
+                    v = each[0]
+                }
+            })
+
+            return [v]
+        }
+        c = 0
+        let value = m.map(each =>{
+            c+=1
+           if (c!==start&& c!==end){
+                return getMinDistance(start,end,c,ans)
+           }
+            return 10**8
+        })
+        console.log(value)
+        let minNode,minValue=10**8
+        c = 0
+        value.map(each=>{
+            c += 1
+            if(each<minValue){
+                minValue = each
+                minNode = c
+            }
+        })
+
+        let ap= [getDistance(start,minNode,ans,st)[0],getDistance(minNode,end,ans,st)[0]]
+        return ap
+    }
+
+    const getMinDistance = (start,des,inter,ans) =>{
+        const gp = dijkstra(ans,inter-1)
+        return gp[start-1] + gp[des-1]
+    }
+
     try {
         const posts = await graghM.find().sort({ _id: -1 });
         const p1 = posts[0];
@@ -122,16 +174,27 @@ export const getGraphs = async (req, res) => {
         const arr = Object.entries(p2)[2][1];
         const st = Object.entries(p2)[0][1];
         const ans = JSON.stringify(dijkstra(arr, parseInt(id)));
-        res.json({ data: ans,stations:JSON.stringify(st)} );
-        // console.log(id);
-        //const a = JSON.parse(posts[0].arr)
-        //const ans = JSON.stringify(dijkstra(a, parseInt(id)));
-        //res.json({ data: ans,idp:id} );
+        const stations = req.query
+        const start = parseInt(stations['s'])
+        const destination = parseInt(stations['d'])
+        console.log(start,destination)
+        console.log(getDistance(start,destination,arr,st));
+        res.json({ data: ans,stations:JSON.stringify(st),dist:getDistance(start,destination,arr,st)} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
 
+export const getCost = async (req, res) => {
+    try {
+        console.log(req);
+        res.json({ d:[] } );
+    }
+    catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+
+}
 
 
 export const postGraph = async (req, res) => {
