@@ -157,8 +157,9 @@ export const getGraphs = async (req, res) => {
                 minNode = c
             }
         })
-
-        let ap= [getDistance(start,minNode,ans,st)[0],getDistance(minNode,end,ans,st)[0]]
+        console.log(2,getDistance(start,minNode,ans,st))
+        console.log(3,getDistance(minNode,end,ans,st))
+        let ap= [...getDistance(start,minNode,ans,st),[minNode],...getDistance(minNode,end,ans,st)]
         return ap
     }
 
