@@ -147,7 +147,7 @@ export const getGraphs = async (req, res) => {
            }
             return 10**8
         })
-        console.log(value)
+        // console.log(value)
         let minNode,minValue=10**8
         c = 0
         value.map(each=>{
@@ -157,8 +157,8 @@ export const getGraphs = async (req, res) => {
                 minNode = c
             }
         })
-        console.log(2,getDistance(start,minNode,ans,st))
-        console.log(3,getDistance(minNode,end,ans,st))
+        // console.log(2,getDistance(start,minNode,ans,st))
+        // console.log(3,getDistance(minNode,end,ans,st))
         let ap= [...getDistance(start,minNode,ans,st),[minNode],...getDistance(minNode,end,ans,st)]
         return ap
     }
@@ -167,6 +167,17 @@ export const getGraphs = async (req, res) => {
         const gp = dijkstra(ans,inter-1)
         return gp[start-1] + gp[des-1]
     }
+
+    const getSum = (start,des,arr,ans) =>{
+        if (arr.length===0){
+            const gp = dijkstra(ans,start-1)
+            return gp[des-1]
+        }
+        const gp = dijkstra(ans,start-1)
+        const a  = arr.splice(0,1)
+        return gp[a[0]-1] + getSum(a[0],des,arr,ans)
+    }
+
 
     try {
         const posts = await graghM.find().sort({ _id: -1 });
@@ -178,9 +189,11 @@ export const getGraphs = async (req, res) => {
         const stations = req.query
         const start = parseInt(stations['s'])
         const destination = parseInt(stations['d'])
-        console.log(start,destination)
-        console.log(getDistance(start,destination,arr,st));
-        res.json({ arr:arr,data: ans,stations:JSON.stringify(st),dist:getDistance(start,destination,arr,st)} );
+        const ds  = getDistance(start,destination,arr,st)
+        const station  = dijkstra(arr,start-1)
+         console.log(station)
+        // console.log(station,getSum(start,end,station,arr))
+        res.json({ arr:arr,data: ans,stations:JSON.stringify(st),dist:ds,cost:dijkstra(arr,start-1)[destination-1]} );
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
